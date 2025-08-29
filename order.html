@@ -3,314 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Local E-Commerce</title>
+  <title>Place Order - NaadanStore</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f9; }
-    header {
-      background: white;
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      padding: 10px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
     }
-    header img { height: 40px; margin-right: 15px; }
-    header h1 { margin: 0; font-size: 20px; color: #2c3e50; }
-
-    .container { width: 90%; margin: auto; padding: 20px; }
-    h2 { color: #2c3e50; }
-
-    /* Freeze action blocks at top */
-    .top-actions {
-      position: sticky;
-      top: 60px;
-      z-index: 900;
-      background: #f4f4f9;
-      padding: 10px 0;
-    }
-
-    /* Orders display */
-    .orders-section { margin-top: 20px; }
-    .order-block {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .order-block h3 {
-      margin-top: 0;
-      color: #2c3e50;
-    }
-    .order { background: #fff; padding: 10px; margin: 8px 0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
-    /* Action buttons */
-    .actions {
-      margin: 20px 0;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .actions .block {
-      flex: 1 1 300px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    header {
+      width: 100%;
+      background: #2e7d32;
+      color: #fff;
       text-align: center;
-      padding: 30px 20px;
-      cursor: pointer;
-      transition: transform 0.2s;
-      max-width: 400px;
+      padding: 1rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-    .actions .block:hover {
-      transform: scale(1.03);
+    .form-container {
+      background: #fff;
+      width: 95%;
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-    .actions h3 { margin-bottom: 15px; }
-
-    /* Popup Modal */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
-      padding: 20px;
+    .form-container h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #333;
+      font-size: 1.5rem;
     }
-    .modal-content {
-      background: white; padding: 30px; border-radius: 15px;
-      width: 100%; max-width: 600px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      animation: fadeIn 0.3s ease-in-out;
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 1rem;
+      margin: 0.7rem 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-20px);} 
-      to {opacity: 1; transform: translateY(0);} 
+    form textarea {
+      min-height: 100px;
+      resize: vertical;
     }
-    .modal-content h3 { margin-top: 0; font-size: 22px; color: #2c3e50; }
-    .modal-content form input, .modal-content form textarea, .modal-content form select, .modal-content form button {
-      width: 100%; padding: 12px; margin: 10px 0;
-      border-radius: 8px; border: 1px solid #ccc;
-      box-sizing: border-box;
-      font-size: 15px;
-    }
-    .modal-content form button {
-      background: #2c3e50; color: white; border: none; cursor: pointer;
-      transition: background 0.2s;
-    }
-    .modal-content form button:hover {
-      background: #34495e;
-    }
-    .close-btn {
-      float: right; cursor: pointer; font-size: 22px; color: #e74c3c;
-    }
-
-    /* Success message */
-    .message {
-      background: #27ae60;
+    form button {
+      width: 100%;
+      background: linear-gradient(135deg, #43a047, #2e7d32);
       color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      margin: 10px 0;
-      display: none;
+      border: none;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+    form button:hover {
+      background: linear-gradient(135deg, #388e3c, #1b5e20);
+      transform: scale(1.02);
+    }
+    .message {
       text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: green;
+      font-size: 1rem;
     }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      header h1 { font-size: 16px; }
-      .actions { flex-direction: column; align-items: center; }
-      .actions .block { width: 100%; max-width: 90%; }
-      .modal-content { max-width: 95%; }
-    }
-
-    @media (aspect-ratio: 16/9) {
-      body { font-size: 16px; }
-      .actions .block { padding: 20px; }
-      .modal-content { max-width: 80%; }
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.2rem;
+        padding: 0.8rem;
+      }
+      .form-container {
+        padding: 1.5rem;
+      }
+      form input, form select, form textarea, form button {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <img src="logo.png" alt="Logo"> <!-- replace logo.png -->
-    <h1>Naadan Store </h1>
+    NaadanStore – Place Your Order
   </header>
 
-  <div class="container">
-    <!-- Success/Info Messages -->
-    <div id="messageBox" class="message"></div>
-
-    <!-- Action Blocks (Sticky) -->
-    <div class="top-actions">
-      <div class="actions">
-        <div class="block" onclick="openModal('shopModal')">
-          <h3>Register Shop</h3>
-          <p>Click here to register your shop with us.</p>
-        </div>
-        <div class="block" onclick="openModal('orderModal')">
-          <h3>Place Order</h3>
-          <p>Click here to place your order quickly.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Orders Section -->
-    <div class="orders-section">
-      <div class="order-block">
-        <h3>New Orders</h3>
-        <div id="newOrders"></div>
-      </div>
-      <div class="order-block">
-        <h3>Completed Orders</h3>
-        <div id="completedOrders"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Shop Registration Modal -->
-  <div class="modal" id="shopModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('shopModal')">&times;</span>
-      <h3>Register Your Shop</h3>
-      <form id="shopForm">
-        <input type="text" id="shopName" placeholder="Shop Name" required>
-        <select id="category" required>
-          <option value="">Select Category</option>
-          <option value="Grocery">Grocery</option>
-          <option value="Vegetables">Vegetables</option>
-          <option value="Clothing">Clothing</option>
-          <option value="Electronics">Electronics</option>
-        </select>
-        <input type="text" id="owner" placeholder="Owner Name" required>
-        <input type="tel" id="phone" placeholder="Phone Number" required>
-        <input type="text" id="gst" placeholder="GST Number (Optional)">
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Order Modal -->
-  <div class="modal" id="orderModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
-      <h3>Place an Order</h3>
-      <form id="orderForm">
-        <input type="text" id="customer" placeholder="Your Name" required>
-        <input type="tel" id="customerPhone" placeholder="Phone Number" required>
-        <textarea id="address" placeholder="Your Address" required></textarea>
-        <textarea id="details" placeholder="Item List / Order Details" required></textarea>
-        <button type="submit">Order</button>
-      </form>
-    </div>
+  <div class="form-container">
+    <h2>Customer Order Form</h2>
+    <form id="orderForm">
+      <input type="text" name="CustomerName" placeholder="👤 Your Name" required>
+      <input type="tel" name="Phone" placeholder="📞 Phone Number" required>
+      <input type="text" name="Address" placeholder="🏠 Delivery Address" required>
+      <select name="Category" required>
+        <option value="">📂 Select Category</option>
+        <option value="Grocery">Grocery</option>
+        <option value="Vegetables">Vegetables</option>
+        <option value="Food">Food</option>
+        <option value="Electrical">Electrical</option>
+        <option value="Household">Household</option>
+      </select>
+      <textarea name="Description" placeholder="📝 Enter your product list here" required></textarea>
+      <button type="submit">✅ Place Order</button>
+    </form>
+    <div class="message" id="formMessage"></div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOYaEE0zmDrsibtsDs0EpumxnJIJetplVA5MnaZ3XSxPJ2ygDLpgEwAVPqhgxIo9I/exec"; // replace with your Apps Script URL
+    const form = document.getElementById("orderForm");
+    const message = document.getElementById("formMessage");
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg0FAXffRANL2zksm6GYN13KxSmDIwCcb7csFoFNPE4zH6OMkbmewmCcEhbA5YjPjc/exec";
 
-    const shopForm = document.getElementById("shopForm");
-    const orderForm = document.getElementById("orderForm");
-    const newOrders = document.getElementById("newOrders");
-    const completedOrders = document.getElementById("completedOrders");
-    const messageBox = document.getElementById("messageBox");
-
-    function openModal(id) {
-      document.getElementById(id).style.display = "flex";
-    }
-    function closeModal(id) {
-      document.getElementById(id).style.display = "none";
-    }
-
-    function showMessage(text) {
-      messageBox.textContent = text;
-      messageBox.style.display = "block";
-      setTimeout(() => messageBox.style.display = "none", 4000);
-    }
-
-    // Ensure all modals are hidden on page load
-    window.onload = function() {
-      document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
-      loadOrders();
-    };
-
-    // Load saved orders from localStorage
-    function loadOrders() {
-      const savedNew = JSON.parse(localStorage.getItem("newOrders")) || [];
-      const savedCompleted = JSON.parse(localStorage.getItem("completedOrders")) || [];
-
-      savedNew.forEach(order => addOrderToDOM(order, false));
-      savedCompleted.forEach(order => addOrderToDOM(order, true));
-    }
-
-    function saveOrders() {
-      const newOrdersData = Array.from(newOrders.children).map(div => div.innerHTML);
-      const completedOrdersData = Array.from(completedOrders.children).map(div => div.innerHTML);
-      localStorage.setItem("newOrders", JSON.stringify(newOrdersData));
-      localStorage.setItem("completedOrders", JSON.stringify(completedOrdersData));
-    }
-
-    // Shop Registration
-    shopForm.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
-      const shop = {
-        type: "shop",
-        shopName: document.getElementById("shopName").value,
-        category: document.getElementById("category").value,
-        owner: document.getElementById("owner").value,
-        phone: document.getElementById("phone").value,
-        gst: document.getElementById("gst").value
-      };
-      shopForm.reset();
-      closeModal("shopModal");
-      showMessage("Shop registered successfully with us!");
-      fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(shop) }).catch(() => {
-        showMessage("Error registering shop. Please try again.");
+
+      const data = new FormData(form);
+      data.append("type", "order");
+
+      // Clear fields immediately
+      form.reset();
+      message.textContent = "⏳ Placing your order...";
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: data
+      })
+      .then(res => res.text())
+      .then(() => {
+        message.textContent = "✅ Your order has been placed successfully!";
+        setTimeout(() => message.textContent = "", 4000);
+      })
+      .catch(err => {
+        message.textContent = "❌ Something went wrong. Please try again.";
+        console.error("Form submission error:", err);
       });
     });
-
-    // Order Form
-    orderForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const order = {
-        customer: document.getElementById("customer").value,
-        phone: document.getElementById("customerPhone").value,
-        address: document.getElementById("address").value,
-        details: document.getElementById("details").value
-      };
-      orderForm.reset();
-      closeModal("orderModal");
-      showMessage("Your order has been placed. We will contact you quickly!");
-      addOrderToDOM(order, false);
-      saveOrders();
-
-      fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(order) }).catch(() => {
-        showMessage("Error placing order. Please try again.");
-      });
-    });
-
-    function addOrderToDOM(order, completed) {
-      const div = document.createElement("div");
-      div.className = "order";
-      div.innerHTML = `
-        <p><strong>Name:</strong> ${order.customer}</p>
-        <p><strong>Phone:</strong> ${order.phone}</p>
-        <p><strong>Address:</strong> ${order.address}</p>
-        <p><strong>Items:</strong> ${order.details}</p>
-        ${!completed ? '<button onclick="markAsCompleted(this)">Mark as Completed</button>' : ''}
-      `;
-      if (completed) {
-        completedOrders.prepend(div);
-      } else {
-        newOrders.prepend(div);
-      }
-    }
-
-    // Move order to Completed
-    function markAsCompleted(button) {
-      const orderDiv = button.parentElement;
-      button.remove();
-      completedOrders.prepend(orderDiv);
-      saveOrders();
-    }
   </script>
+
 </body>
 </html>
