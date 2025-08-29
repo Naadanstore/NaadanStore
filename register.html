@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Shop - NaadanStore</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      background: #ffffff;
+      color: #2e7d32;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      font-size: 1.4rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .form-container {
+      background: #fff;
+      width: 95%;
+      max-width: 480px;
+      margin: 2rem auto;
+      padding: 2.2rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+    .form-container:hover {
+      transform: translateY(-2px);
+    }
+    .form-container h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #333;
+      font-size: 1.5rem;
+    }
+    form input, form select {
+      width: 100%;
+      padding: 1rem;
+      margin: 0.7rem 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    form input:focus, form select:focus {
+      border-color: #2e7d32;
+      box-shadow: 0 0 5px rgba(46, 125, 50, 0.2);
+    }
+    form button {
+      width: 100%;
+      background: linear-gradient(135deg, #43a047, #2e7d32);
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+    form button:hover {
+      background: linear-gradient(135deg, #388e3c, #1b5e20);
+      transform: scale(1.02);
+    }
+    .message {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: green;
+      font-size: 1rem;
+      transition: opacity 0.5s;
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.2rem;
+        padding: 0.8rem;
+      }
+      .form-container {
+        padding: 1.5rem;
+      }
+      form input, form select, form button {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    NaadanStore – Shop Registration
+  </header>
+
+  <div class="form-container">
+    <h2>Shop keeper Registration</h2>
+    <form id="shopForm">
+      <input type="text" name="ShopName" placeholder="🏬 Shop Name" required>
+      
+      <select name="Category" required>
+        <option value="">📂 Select Category</option>
+        <option value="Grocery">Grocery</option>
+        <option value="Vegetables">Vegetables</option>
+        <option value="Foods">Foods</option>
+        <option value="Electrical">Electrical</option>
+        <option value="households">households</option>
+      </select>
+      
+      <input type="text" name="Owner" placeholder="👤 Owner Name" required>
+      <input type="tel" name="Phone" placeholder="📞 Phone Number" required>
+      <input type="text" name="GST" placeholder="💳 GST Number (Optional)">
+      
+      <button type="submit">✅ Register Shop</button>
+    </form>
+    <div class="message" id="formMessage"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("shopForm");
+    const message = document.getElementById("formMessage");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      // Instant reset
+      form.reset();
+      message.textContent = "⏳ Registering shop...";
+
+      // Append data manually for POST
+      fetch("https://script.google.com/macros/s/AKfycbzuiEr_PF7wkzUwBB0asDWUufd4cGDPdHgTjBYX9Lnea41gyG48e2-VjpMSgBFXBZ8/exec", {
+        method: "POST",
+        body: new URLSearchParams([...formData])
+      })
+      .then(res => res.text())
+      .then(data => {
+        message.textContent = "✅ Shop registered successfully!";
+        setTimeout(() => message.textContent = "", 3000);
+      })
+      .catch(err => {
+        message.textContent = "❌ Error! Please try again.";
+        console.error("Error!", err.message);
+      });
+    });
+  </script>
+
+</body>
+</html>
