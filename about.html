@@ -4,102 +4,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - NaadanStore</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f7fa;
-      color: #333;
-      line-height: 1.6;
+    .navbar {
+      background-color: #2e7d32 !important;
     }
-    header {
-      background: #2e7d32;
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 1.6rem;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    .navbar-brand, .nav-link {
+      color: white !important;
+      font-weight: 500;
     }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
+    .navbar-brand img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    .container-box {
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #2e7d32;
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-    p {
-      margin-bottom: 1rem;
-      font-size: 1.05rem;
+      padding: 2rem;
+      margin-top: 2rem;
     }
     .vision {
       background: #e8f5e9;
       padding: 1rem;
       border-left: 6px solid #2e7d32;
-      margin: 1.5rem 0;
+      margin-top: 1rem;
       border-radius: 8px;
       font-style: italic;
     }
     footer {
-      text-align: center;
-      padding: 1rem;
       background: #2e7d32;
       color: white;
+      text-align: center;
+      padding: 1rem;
       margin-top: 2rem;
       font-size: 0.9rem;
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding: 1.5rem;
-      }
-      header {
-        font-size: 1.3rem;
-      }
     }
   </style>
 </head>
 <body>
 
-  <header>About NaadanStore</header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="logo.png" alt="NaadanStore Logo"> NaadanStore
+      </a>
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="order.html">Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="register.html">Register Shop</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  <div class="container">
-    <h2>Our Vision</h2>
-    <div class="vision">
-      At NaadanStore, our vision is to help local stores bring their products online quickly and easily, 
-      while ensuring customers receive their daily requirements right at their doorstep.  
+  <!-- About Content -->
+  <div class="container container-box">
+    
+    <!-- Our Vision -->
+    <div class="row align-items-center mb-4">
+      <div class="col-md-2 text-center">
+        <img src="logo.png" alt="NaadanStore Logo" width="80">
+      </div>
+      <div class="col-md-10">
+        <h2 class="text-md-start text-center">Our Vision</h2>
+        <div class="vision">
+          At NaadanStore, our vision is to help local stores bring their products online quickly and easily, 
+          while ensuring customers receive their daily requirements right at their doorstep.  
+        </div>
+      </div>
     </div>
 
-    <h2>Why NaadanStore?</h2>
-    <p>
-      Inspired by the simple yet thoughtful way Indian moms prepare grocery lists to ensure nothing is forgotten,  
-      we designed our ordering format to be just as practical and intuitive.  
-    </p>
-    <p>
-      We aim to bridge the gap between shopkeepers and customers by creating a platform that celebrates local 
-      businesses and delivers convenience to every household.  
-    </p>
+    <!-- Why NaadanStore -->
+    <div class="row align-items-center mb-4">
+      <div class="col-md-2 text-center">
+        <img src="logo.png" alt="NaadanStore Logo" width="80">
+      </div>
+      <div class="col-md-10">
+        <h2 class="text-md-start text-center">Why NaadanStore?</h2>
+        <p>
+          Inspired by the simple yet thoughtful way Indian moms prepare grocery lists to ensure nothing is forgotten,  
+          we designed our ordering format to be just as practical and intuitive.  
+        </p>
+        <p>
+          We aim to bridge the gap between shopkeepers and customers by creating a platform that celebrates local 
+          businesses and delivers convenience to every household.  
+        </p>
+      </div>
+    </div>
 
-    <h2>Our Gratitude</h2>
-    <p>
-      To our customers and shop owners, we extend our heartfelt thanks.  
-      With your blessings and support, NaadanStore is growing into a trusted partner for daily needs.  
-    </p>
-    <p>
-      Together, we are not just making shopping easier — we are strengthening the bond between local stores and families.  
-    </p>
+    <!-- Our Gratitude -->
+    <div class="row align-items-center">
+      <div class="col-md-2 text-center">
+        <img src="logo.png" alt="NaadanStore Logo" width="80">
+      </div>
+      <div class="col-md-10">
+        <h2 class="text-md-start text-center">Our Gratitude</h2>
+        <p>
+          To our customers and shop owners, we extend our heartfelt thanks.  
+          With your blessings and support, NaadanStore is growing into a trusted partner for daily needs.  
+        </p>
+        <p>
+          Together, we are not just making shopping easier — we are strengthening the bond between local stores and families.  
+        </p>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Footer -->
   <footer>
     © 2025 NaadanStore. All Rights Reserved.
   </footer>
 
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
