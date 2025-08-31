@@ -101,7 +101,7 @@
           </select>
         </div>
         <div class="mb-3">
-          <textarea name="Description" class="form-control form-control-lg" placeholder="📝 Enter your product list here" rows="4" required></textarea>
+          <textarea name="Description" class="form-control form-control-lg" placeholder="📝 Write down the product list here.. (eg.Sugar - 1kg)" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn btn-brand btn-lg w-100">✅ Place Order</button>
       </form>
@@ -135,7 +135,7 @@
       })
       .then(res => res.text())
       .then(() => {
-        message.textContent = "✅ Your order has been placed successfully!";
+        message.textContent = "✅ Your order placed! We will call you with in 5 min for confirmation";
         setTimeout(() => message.textContent = "", 4000);
       })
       .catch(err => {
