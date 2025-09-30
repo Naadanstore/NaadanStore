@@ -161,13 +161,19 @@
       text-align: center;
       font-size: 0.9rem;
     }
+    .nav-link {
+  color: inherit;           /* matches parent color */
+  text-decoration: none;    /* no underline */
+}
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <!--img src="logo.png" alt="NaadanStore Logo" width="10" class="mb-4"-->
-            <div class="logo">Naadanstore</div>
+            <!--img src="logo.png" alt="NaadanStore Logo" width="10" class="mb-4">
+            <div class="logo" href="index.html" >Naadanstore</div-->
+            <div class="logo"><a class="nav-link" href="index.html">  Naadanstore</a></div>
+
             <div class="cart-icon" onclick="toggleCart()">
                 🛒 <span id="cart-count">0</span>
             </div>
