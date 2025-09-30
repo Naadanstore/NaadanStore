@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naadanstore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #2e7d32;
+            padding: 1rem;
+            box-shadow: 0 2px 5px #af93931a;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cart-icon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        #cart-count {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .product-card button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            margin-top: 1rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input, textarea {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+            footer {
+      background: #2e7d32;
+      color: #fff;
+      padding: 1rem;
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <!--img src="logo.png" alt="NaadanStore Logo" width="10" class="mb-4"-->
+            <div class="logo">Naadanstore</div>
+            <div class="cart-icon" onclick="toggleCart()">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="products-grid" id="products">
+            <!-- Products will be loaded dynamically -->
+        </div>
+    </main>
+
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleCart()">&times;</span>
+            <h2>Your Cart</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                Total: <span id="cart-total">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="showCheckout()">Checkout</button>
+        </div>
+    </div>
+
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleCheckout()">&times;</span>
+            <h2>Checkout</h2>
+            <form id="checkout-form" onsubmit="processCheckout(event)">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email" >
+                <input type="tel" name="phone" placeholder="Phone" required>
+                <textarea name="address" placeholder="Delivery Address" required></textarea>
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Cart Management
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]')
+
+        // Cart Functions
+        const cartFunctions = {
+            addToCart(product) {
+                if (!product || typeof product.id === 'undefined') return
+                const existingItem = cart.find(item => item.id === product.id)
+                if (existingItem) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1
+                } else {
+                    cart.push({...product, quantity: 1})
+                }
+                this.saveCartToStorage()
+                this.updateCartDisplay()
+            },
+            removeFromCart(productId) {
+                cart = cart.filter(item => item.id !== productId)
+                this.saveCartToStorage()
+                this.updateCartDisplay()
+            },
+            toggleCart() {
+                const cartModal = document.getElementById('cart-modal')
+                cartModal.style.display = cartModal.style.display === 'flex' ? 'none' : 'flex'
+            },
+            showCheckout() {
+                const checkoutModal = document.getElementById('checkout-modal')
+                checkoutModal.style.display = 'flex'
+            },
+            toggleCheckout() {
+                const checkoutModal = document.getElementById('checkout-modal')
+                checkoutModal.style.display = checkoutModal.style.display === 'flex' ? 'none' : 'flex'
+            },
+            processCheckout(event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                const orderData = Object.fromEntries(formData.entries());
+                orderData.items = cart;
+
+                (async () => {
+                    try {
+                        const result = await sendOrderToGoogleSheets(orderData);
+                        console.log('Order sent successfully:', result);
+
+                        // Clear cart and update UI
+                        cart = [];
+                        this.saveCartToStorage();
+                        this.updateCartDisplay();
+
+                        // Close modals and reset form
+                        const checkoutModal = document.getElementById('checkout-modal');
+                        const cartModal = document.getElementById('cart-modal');
+                        if (checkoutModal) checkoutModal.style.display = 'none';
+                        if (cartModal) cartModal.style.display = 'none';
+                        event.target.reset();
+                        alert('Order placed successfully!');
+                    } catch (err) {
+                        console.error('Error during checkout:', err);
+                        alert('There was an error placing your order. Please try again.');
+                    }
+                })();
+            },
+            saveCartToStorage() {
+                localStorage.setItem('cart', JSON.stringify(cart))
+            },
+            updateCartDisplay() {
+                const cartCount = document.getElementById('cart-count')
+                const cartItemsContainer = document.getElementById('cart-items')
+                const cartTotal = document.getElementById('cart-total')
+                
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0)
+                const totalPrice = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 0)), 0)
+                
+                cartCount.textContent = totalItems
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div>${item.name} (x${item.quantity})</div>
+                        <div>₹${item.price * item.quantity}</div>
+                        <button onclick="removeFromCart(${item.id})">Remove</button>
+                    </div>
+                `).join('')
+                cartTotal.textContent = `₹${totalPrice}`
+            }
+        }
+
+        // Initialize handlers
+        window.handleCart = cartFunctions
+        window.addToCart = cartFunctions.addToCart.bind(cartFunctions)
+        window.removeFromCart = cartFunctions.removeFromCart.bind(cartFunctions)
+        window.toggleCart = cartFunctions.toggleCart.bind(cartFunctions)
+        window.showCheckout = cartFunctions.showCheckout.bind(cartFunctions)
+        window.processCheckout = cartFunctions.processCheckout.bind(cartFunctions)
+        window.toggleCheckout = cartFunctions.toggleCheckout.bind(cartFunctions)
+
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://zftccdnmihcbetqzwqhm.supabase.co'
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmdGNjZG5taWhjYmV0cXp3cWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgyOTg0NDgsImV4cCI6MjA3Mzg3NDQ0OH0.YQ57UqRvqFcDWsmoYdxRqZZUI_A_IJicXS6x7qVdcSU'
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+        // Load Products Function
+        async function loadProducts() {
+            const productsContainer = document.getElementById('products')
+            if (!productsContainer) {
+                console.error('Products container not found')
+                return []
+            }
+
+            try {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*')
+                
+                console.log('Supabase response:', { products, error }) // Debug log
+
+                if (error) throw error
+                
+                if (!products || products.length === 0) {
+                    productsContainer.innerHTML = '<p>No products available</p>'
+                    return []
+                }
+
+                productsContainer.innerHTML = products.map(product => {
+                    const imageUrl = product.image || 'https://placehold.co/200x200/png'
+                    const safeProduct = JSON.stringify(product).replace(/"/g, '&quot;')
+                    return `
+                        <div class="product-card">
+                            <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://placehold.co/200x200/png'">
+                            <h3>${product.name}</h3>
+                            <p>₹${product.price}</p>
+                            <button onclick="addToCart(${safeProduct})">Add to Cart</button>
+                        </div>
+                    `
+                }).join('')
+
+                console.log('Products loaded:', products.length)
+                return products
+            } catch (error) {
+                console.error('Error loading products:', error)
+                productsContainer.innerHTML = '<p>Error loading products</p>'
+                return []
+            }
+        }
+
+        // Google Sheets Integration
+        async function sendOrderToGoogleSheets(orderData) {
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNzaEkt8euD94sDeGjO_JFTTiBTeh8NiHsty98i0BEvBVhxDoVWpqp31yhNIMWjucB/exec';
+
+            const formattedItems = orderData.items.map(item =>
+                `${item.name} (${item.quantity}x ₹${item.price})`
+            ).join(', ');
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                name: orderData.name,
+                email: orderData.email,
+                phone: orderData.phone,
+                address: orderData.address,
+                items: formattedItems,
+                total: orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+            };
+
+            // Try POST request
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    return { status: 'success', response: await response.json() };
+                } else {
+                    console.warn('POST failed, falling back to GET.');
+                }
+            } catch (error) {
+                console.warn('POST error, falling back to GET:', error);
+            }
+
+            // Fallback to GET request
+            try {
+                const params = new URLSearchParams(payload);
+                await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                });
+
+                return { status: 'success-fallback' };
+            } catch (error) {
+                console.error('Both POST and GET failed:', error);
+                throw error;
+            }
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, loading products...')
+            loadProducts()
+            cartFunctions.updateCartDisplay()
+        })
+    </script>
+      <!-- ✅ Footer -->
+  <footer class="text-center bg-light py-3 small text-muted">
+    © 2025 NaadanStore. All rights reserved.
+  </footer>
+</body>
+</html>
